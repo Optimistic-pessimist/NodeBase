@@ -1,6 +1,0 @@
-#ifndef NODEBASE_LIBRARY_H
-#define NODEBASE_LIBRARY_H
-
-
-
-#endif //NODEBASE_LIBRARY_H

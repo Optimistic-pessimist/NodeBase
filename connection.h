@@ -17,7 +17,7 @@ public:
         value = T();
     }
 
-    void set(T v)
+    void __set(T v)
     {
         value = v;
     }
@@ -35,11 +35,17 @@ private:
     point<T> *target;
 
 public:
-    connection() {
+    connection()
+    {
         target = nullptr;
     }
 
-    void connect(const point<T> &to)
+    explicit connection(point<T> &to)
+    {
+        target = &to;
+    }
+
+    void connect(point<T> &to)
     {
         target = &to;
     }
@@ -51,7 +57,7 @@ public:
 
     void set(T value)
     {
-        target->set(value);
+        target->__set(value);
     }
 };
 
