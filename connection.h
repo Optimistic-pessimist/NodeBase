@@ -6,20 +6,34 @@
 #define NODEBASE_CONNECTION_H
 
 template<typename T>
-class point
+class Point
 {
 private:
     T value;
+    bool set;
 
 public:
-    point()
+    Point()
     {
         value = T();
+        set = false;
     }
 
     void __set(T v)
     {
         value = v;
+        set = true;
+    }
+
+    void __refresh()
+    {
+        value = T();
+        set = false;
+    }
+
+    bool __validate()
+    {
+        return set;
     }
 
     T get()
@@ -29,23 +43,23 @@ public:
 };
 
 template<typename T>
-class connection
+class Connection
 {
 private:
-    point<T> *target;
+    Point<T> *target;
 
 public:
-    connection()
+    Connection()
     {
         target = nullptr;
     }
 
-    explicit connection(point<T> &to)
+    explicit Connection(Point<T> &to)
     {
         target = &to;
     }
 
-    void connect(point<T> &to)
+    void connect(Point<T> &to)
     {
         target = &to;
     }
