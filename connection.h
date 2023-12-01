@@ -5,6 +5,8 @@
 #ifndef NODEBASE_CONNECTION_H
 #define NODEBASE_CONNECTION_H
 
+#include <vector>
+
 template<typename T>
 class Point
 {
@@ -46,32 +48,34 @@ template<typename T>
 class Connection
 {
 private:
-    Point<T> *target;
+    std::vector<Point<T>*> target;
 
 public:
     Connection()
     {
-        target = nullptr;
-    }
-
-    explicit Connection(Point<T> &to)
-    {
-        target = &to;
+        target = std::vector<Point<T>*>();
     }
 
     void connect(Point<T> &to)
     {
-        target = &to;
+        target.push_back(&to);
     }
 
-    void disconnect()
+    void disconnect(Point<T> &to)
     {
-        target = nullptr;
+        target.erase(std::find(target.begin(), target.end(), &to));
     }
 
     void set(T value)
     {
-        target->__set(value);
+        for(auto i : target) {
+            i->__set(value);
+        }
+    }
+
+    bool __validate()
+    {
+        return target->set;
     }
 };
 
