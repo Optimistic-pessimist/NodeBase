@@ -14,21 +14,21 @@ template<typename T>
 class Node
 {
 private:
-    std::vector<Point<T>> (*processf)(std::vector<Point<T>> inputs);
+    std::vector<T> (*processf)(std::vector<T> inputs);
     std::vector<Point<T>> input;
     std::vector<Connection<T>> output;
     unsigned long long inputc, outputc;
 
 public:
     Node(unsigned long long inputs, unsigned long long outputs) {
-        processf = [&outputs](std::vector<Point<T>> inputs){return std::vector<Point<T>>(outputs, T());};
+        processf = [&outputs](std::vector<T> inputs){return std::vector<T>(outputs, T());};
         input = std::vector<Point<T>>(inputs, Point<T>());
         output = std::vector<Connection<T>>(outputs, Connection<T>());
         inputc = inputs;
         outputc = outputs;
     }
 
-    explicit Node(unsigned long long inputs, unsigned long long outputs, std::vector<Point<T>> (*processfunc)(std::vector<T> *input)) {
+    explicit Node(unsigned long long inputs, unsigned long long outputs, std::vector<T> (*processfunc)(std::vector<T> *input)) {
         processf = processfunc;
         input = std::vector<Point<T>>(inputs, Point<T>());
         output = std::vector<Connection<T>>(outputs, Connection<T>());
@@ -43,9 +43,13 @@ public:
     //process the Node
     void process()
     {
-        std::vector<Point<T>> res = processf(input);
+        std::vector<T> linput(inputc);
+        for(int i = 0; i < inputc; i++) {
+            linput[i] = input[i].get();
+        }
+        std::vector<T> res = processf(linput);
         for(int i = 0; i < outputc; i++) {
-            output[i].set(res[i].get());
+            output[i].set(res[i]);
         }
     }
 
@@ -142,7 +146,7 @@ public:
     }
 
     // process Scene
-    std::vector<Point<T>> process(std::vector<Point<T>> inputs)
+    std::vector<T> process(std::vector<T> inputs)
     {
         __refresh();
         for(int i = 0; i < inputc; i++) {
@@ -158,7 +162,11 @@ public:
             iteration_count++;
         }
         throw NodeBaseUtillity::Warning("Scene contains a disconnected Point or a loop");
-        return output;
+        std::vector<T> loutput(outputc);
+        for(int i = 0; i < outputc; i++) {
+            loutput[i] = output[i].get();
+        }
+        return loutput;
     }
 };
 
