@@ -115,7 +115,6 @@ template<typename T>
 class Scene
 {
 private:
-    std::vector<Node<T>*> nodes;
     std::vector<Connection<T>> input;
     unsigned long long inputc, outputc, process_max_iteration_count;
 
@@ -138,6 +137,7 @@ private:
     }
 
 public:
+    std::vector<Node<T>*> nodes;
     std::vector<Point<T>> output;
 
     Scene(unsigned long long inputs, unsigned long long outputs) {
