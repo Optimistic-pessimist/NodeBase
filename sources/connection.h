@@ -75,7 +75,11 @@ public:
 
     bool __validate()
     {
-        return target->set;
+        for(auto i : target) {
+            bool res = i->__validate();
+            if(!res) return false;
+        }
+        return true;
     }
 };
 
