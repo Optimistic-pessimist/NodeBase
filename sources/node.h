@@ -7,13 +7,13 @@
 
 #include "connection.h"
 #include <vector>
-#include <ostream>
+#include <utility>
 
 template<typename T>
 class Node
 {
 public:
-    std::vector<T> (*__processf)(std::vector<T> inputs);
+    std::function<std::vector<T>(std::vector<T>)> *__processf;
     std::vector<Point<T>> input;
     std::vector<Connection<T>> __output;
     unsigned long long __inputc, __outputc;
