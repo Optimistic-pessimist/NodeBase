@@ -150,7 +150,7 @@ public:
     {
         __refresh();
         for(int i = 0; i < inputc; i++) {
-            input[i].set(inputs[i].get());
+            input[i].set(inputs[i]);
         }
         unsigned long long iteration_count = 0;
         while(!__validate() && iteration_count <= process_max_iteration_count) {
