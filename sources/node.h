@@ -27,9 +27,7 @@ public:
         __outputc = outputs;
     }
 
-
-
-    explicit Node(unsigned long long inputs, unsigned long long outputs, std::vector<T> (*processfunc)(std::vector<T> *input)) {
+    explicit Node(unsigned long long inputs, unsigned long long outputs, std::vector<T> (*processfunc)(std::vector<T> input)) {
         __processf = processfunc;
         __input = std::vector<Point<T>>(inputs, Point<T>());
         __output = std::vector<Connection<T>>(outputs, Connection<T>());
