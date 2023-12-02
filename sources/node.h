@@ -19,9 +19,14 @@ private:
     std::vector<Connection<T>> output;
     unsigned long long inputc, outputc;
 
+    std::vector<T> blank_function(std::vector<T> inputs)
+    {
+        return std::vector<T>(inputc);
+    }
+
 public:
     Node(unsigned long long inputs, unsigned long long outputs) {
-        processf = [&outputs](std::vector<T> inputs){return std::vector<T>(outputs, T());};
+        processf = &blank_function;
         input = std::vector<Point<T>>(inputs, Point<T>());
         output = std::vector<Connection<T>>(outputs, Connection<T>());
         inputc = inputs;
