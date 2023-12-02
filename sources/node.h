@@ -44,15 +44,6 @@ public:
         __outputc = outputs;
     }
 
-    // copy constructor
-    explicit Node(Node<T> &from) {
-        __processf = from.__processf;
-        input = from.input;
-        __output = from.__output;
-        __inputc = from.__inputc;
-        __outputc = from.__outputc;
-    }
-
     void set_processf(std::vector<T> (*processfunc)(std::vector<T> *input))
     {
         __processf = processfunc;
@@ -107,16 +98,19 @@ template<typename T>
 class Node_prototype
 {
 private:
-    Node<T> *original;
+    std::function<std::vector<T>(std::vector<T>)> __processf;
+    unsigned long long __inputc, __outputc;
 
 public:
-    explicit Node_prototype(Node<T> *from) {
-        original = from;
+    explicit Node_prototype(unsigned long long inputs, unsigned long long outputs, std::function<std::vector<T>(std::vector<T>)> processfunc) {
+        __processf = processfunc;
+        __inputc = inputs;
+        __outputc = outputs;
     }
 
     Node<T>* create()
     {
-        return new Node<T>(*original);
+        return new Node<T>(__inputc, __outputc, __processf);
     }
 };
 
@@ -125,6 +119,7 @@ class Scene
 {
 private:
     std::vector<Connection<T>> input;
+    std::vector<Point<T>> output;
     unsigned long long inputc, outputc, process_max_iteration_count;
 
     // check if process should end early
@@ -147,7 +142,6 @@ private:
 
 public:
     std::vector<Node<T>*> nodes;
-    std::vector<Point<T>> output;
 
     Scene(unsigned long long inputs, unsigned long long outputs) {
         nodes = std::vector<Node<T>*>();
