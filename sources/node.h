@@ -13,58 +13,68 @@
 template<typename T>
 class Node
 {
-private:
-    std::vector<T> (*processf)(std::vector<T> inputs);
-    std::vector<Point<T>> input;
-    std::vector<Connection<T>> output;
-    unsigned long long inputc, outputc;
-
 public:
+    std::vector<T> (*__processf)(std::vector<T> inputs);
+    std::vector<Point<T>> __input;
+    std::vector<Connection<T>> __output;
+    unsigned long long __inputc, __outputc;
+
     Node(unsigned long long inputs, unsigned long long outputs) {
-        processf = nullptr;
-        input = std::vector<Point<T>>(inputs, Point<T>());
-        output = std::vector<Connection<T>>(outputs, Connection<T>());
-        inputc = inputs;
-        outputc = outputs;
+        __processf = nullptr;
+        __input = std::vector<Point<T>>(inputs, Point<T>());
+        __output = std::vector<Connection<T>>(outputs, Connection<T>());
+        __inputc = inputs;
+        __outputc = outputs;
     }
 
+
+
     explicit Node(unsigned long long inputs, unsigned long long outputs, std::vector<T> (*processfunc)(std::vector<T> *input)) {
-        processf = processfunc;
-        input = std::vector<Point<T>>(inputs, Point<T>());
-        output = std::vector<Connection<T>>(outputs, Connection<T>());
-        inputc = inputs;
-        outputc = outputs;
+        __processf = processfunc;
+        __input = std::vector<Point<T>>(inputs, Point<T>());
+        __output = std::vector<Connection<T>>(outputs, Connection<T>());
+        __inputc = inputs;
+        __outputc = outputs;
+    }
+
+    // copy constructor
+    explicit Node(Node<T> &from) {
+        __processf = from.__processf;
+        __input = from.__input;
+        __output = from.__output;
+        __inputc = from.__inputc;
+        __outputc = from.__outputc;
     }
 
     ~Node() {
-        delete processf;
+        delete __processf;
     }
 
-    void set_procesf(std::vector<T> (*processfunc)(std::vector<T> *input))
+    void set_processf(std::vector<T> (*processfunc)(std::vector<T> *input))
     {
-        processf = processfunc;
+        __processf = processfunc;
     }
 
     //process the Node
     void process()
     {
-        if(!processf) {
+        if(!__processf) {
             throw std::runtime_error("Node process function not set");
         }
-        std::vector<T> linput(inputc);
-        for(int i = 0; i < inputc; i++) {
-            linput[i] = input[i].get();
+        std::vector<T> linput(__inputc);
+        for(int i = 0; i < __inputc; i++) {
+            linput[i] = __input[i].get();
         }
-        std::vector<T> res = processf(linput);
-        for(int i = 0; i < outputc; i++) {
-            output[i].set(res[i]);
+        std::vector<T> res = __processf(linput);
+        for(int i = 0; i < __outputc; i++) {
+            __output[i].set(res[i]);
         }
     }
 
     // check for this Node if process should end early
     bool __validate()
     {
-        for(auto i : input) {
+        for(auto i : __input) {
             bool res = i.__validate();
             if(!res) return false;
         }
@@ -74,7 +84,7 @@ public:
     // check if the outputs of the Node has all been set
     bool __set()
     {
-        for(auto i : output) {
+        for(auto i : __output) {
             bool res = i.__validate();
             if(!res) return false;
         }
@@ -84,9 +94,26 @@ public:
     // return this Node to defalt state
     void __refresh()
     {
-        for(auto i : input) {
+        for(auto i : __input) {
             i.__refresh();
         }
+    }
+};
+
+template<typename T>
+class Node_prototype
+{
+private:
+    Node<T> *original;
+
+public:
+    Node_prototype(Node<T> &from) {
+        original = &from;
+    }
+
+    Node<T>* create()
+    {
+        return new Node<T>(*original);
     }
 };
 
@@ -144,13 +171,13 @@ public:
     void add_node(Node<T> &node)
     {
         nodes.push_back(&node);
-        process_max_iteration_count += node.inputc;
+        process_max_iteration_count += node.__inputc;
     }
 
     void remove_node(Node<T> &node)
     {
         nodes.erase(std::find(nodes.begin(), nodes.end(), &node));
-        process_max_iteration_count -= node.inputc;
+        process_max_iteration_count -= node.__inputc;
     }
 
     // process Scene
