@@ -15,13 +15,13 @@ class Node
 {
 public:
     std::vector<T> (*__processf)(std::vector<T> inputs);
-    std::vector<Point<T>> __input;
+    std::vector<Point<T>> input;
     std::vector<Connection<T>> __output;
     unsigned long long __inputc, __outputc;
 
     Node(unsigned long long inputs, unsigned long long outputs) {
         __processf = nullptr;
-        __input = std::vector<Point<T>>(inputs, Point<T>());
+        input = std::vector<Point<T>>(inputs, Point<T>());
         __output = std::vector<Connection<T>>(outputs, Connection<T>());
         __inputc = inputs;
         __outputc = outputs;
@@ -29,7 +29,7 @@ public:
 
     explicit Node(unsigned long long inputs, unsigned long long outputs, std::vector<T> (*processfunc)(std::vector<T> input)) {
         __processf = processfunc;
-        __input = std::vector<Point<T>>(inputs, Point<T>());
+        input = std::vector<Point<T>>(inputs, Point<T>());
         __output = std::vector<Connection<T>>(outputs, Connection<T>());
         __inputc = inputs;
         __outputc = outputs;
@@ -38,7 +38,7 @@ public:
     // copy constructor
     explicit Node(Node<T> &from) {
         __processf = from.__processf;
-        __input = from.__input;
+        input = from.input;
         __output = from.__output;
         __inputc = from.__inputc;
         __outputc = from.__outputc;
@@ -57,7 +57,7 @@ public:
         }
         std::vector<T> linput(__inputc);
         for(int i = 0; i < __inputc; i++) {
-            linput[i] = __input[i].get();
+            linput[i] = input[i].get();
         }
         std::vector<T> res = __processf(linput);
         for(int i = 0; i < __outputc; i++) {
@@ -68,7 +68,7 @@ public:
     // check for this Node if process should end early
     bool __validate()
     {
-        for(auto i : __input) {
+        for(auto i : input) {
             bool res = i.__validate();
             if(!res) return false;
         }
@@ -88,7 +88,7 @@ public:
     // return this Node to defalt state
     void __refresh()
     {
-        for(auto i : __input) {
+        for(auto i : input) {
             i.__refresh();
         }
     }
