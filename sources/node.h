@@ -13,7 +13,7 @@ template<typename T>
 class Node
 {
 public:
-    std::function<std::vector<T>(std::vector<T>)> *__processf;
+    std::function<std::vector<T>(std::vector<T>)> __processf;
     std::vector<Point<T>> input;
     std::vector<Connection<T>> __output;
     unsigned long long __inputc, __outputc;
@@ -36,7 +36,7 @@ public:
         __outputc = outputs;
     }
 
-    explicit Node(unsigned long long inputs, unsigned long long outputs, std::function<std::vector<T>(std::vector<T>)> *processfunc) {
+    explicit Node(unsigned long long inputs, unsigned long long outputs, std::function<std::vector<T>(std::vector<T>)> processfunc) {
         __processf = processfunc;
         input = std::vector<Point<T>>(inputs, Point<T>());
         __output = std::vector<Connection<T>>(outputs, Connection<T>());
@@ -199,6 +199,11 @@ public:
                 }
             }
             iteration_count++;
+        }
+        for(auto i : nodes) {
+            if(i->__validate() && !i->__set()) {
+                i->process();
+            }
         }
         std::vector<T> loutput(outputc);
         for(int i = 0; i < outputc; i++) {
