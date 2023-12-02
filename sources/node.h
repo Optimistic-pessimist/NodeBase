@@ -19,14 +19,9 @@ private:
     std::vector<Connection<T>> output;
     unsigned long long inputc, outputc;
 
-    std::vector<T> blank_function(std::vector<T> inputs)
-    {
-        return std::vector<T>(inputc);
-    }
-
 public:
     Node(unsigned long long inputs, unsigned long long outputs) {
-        processf = &blank_function;
+        processf = nullptr;
         input = std::vector<Point<T>>(inputs, Point<T>());
         output = std::vector<Connection<T>>(outputs, Connection<T>());
         inputc = inputs;
@@ -53,6 +48,9 @@ public:
     //process the Node
     void process()
     {
+        if(!processf) {
+            throw std::runtime_error("Node process function not set");
+        }
         std::vector<T> linput(inputc);
         for(int i = 0; i < inputc; i++) {
             linput[i] = input[i].get();
