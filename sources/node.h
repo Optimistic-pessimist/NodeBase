@@ -40,6 +40,11 @@ public:
         delete processf;
     }
 
+    void set_procesf(std::vector<T> (*processfunc)(std::vector<T> *input))
+    {
+        processf = processfunc;
+    }
+
     //process the Node
     void process()
     {
