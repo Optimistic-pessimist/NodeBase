@@ -19,6 +19,16 @@ public:
     std::vector<Connection<T>> __output;
     unsigned long long __inputc, __outputc;
 
+    void connect(unsigned long long i, Point<T> &to)
+    {
+        __output[i].connect(to);
+    }
+
+    void disconnect(unsigned long long i, Point<T> &to)
+    {
+        __output[i].disconnect(to);
+    }
+
     Node(unsigned long long inputs, unsigned long long outputs) {
         __processf = nullptr;
         input = std::vector<Point<T>>(inputs, Point<T>());
