@@ -141,7 +141,7 @@ private:
     // return all Nodes to default state
     void __refresh()
     {
-        for(auto i : input) {
+        for(auto i : nodes) {
             i->__refresh();
         }
     }
