@@ -163,16 +163,16 @@ public:
         output[i].disconnect(to);
     }
 
-    void add_node(Node<T> &node)
+    void add_node(Node<T> *node)
     {
-        nodes.push_back(&node);
-        process_max_iteration_count += node.__inputc;
+        nodes.push_back(node);
+        process_max_iteration_count += node->__inputc;
     }
 
-    void remove_node(Node<T> &node)
+    void remove_node(Node<T> *node)
     {
-        nodes.erase(std::find(nodes.begin(), nodes.end(), &node));
-        process_max_iteration_count -= node.__inputc;
+        nodes.erase(std::find(nodes.begin(), nodes.end(), node));
+        process_max_iteration_count -= node->__inputc;
     }
 
     // process Scene
