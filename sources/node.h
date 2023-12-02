@@ -44,10 +44,6 @@ public:
         __outputc = from.__outputc;
     }
 
-    ~Node() {
-        delete __processf;
-    }
-
     void set_processf(std::vector<T> (*processfunc)(std::vector<T> *input))
     {
         __processf = processfunc;
@@ -105,8 +101,8 @@ private:
     Node<T> *original;
 
 public:
-    Node_prototype(Node<T> &from) {
-        original = &from;
+    explicit Node_prototype(Node<T> *from) {
+        original = from;
     }
 
     Node<T>* create()
@@ -121,7 +117,6 @@ class Scene
 private:
     std::vector<Node<T>*> nodes;
     std::vector<Connection<T>> input;
-    std::vector<Point<T>> output;
     unsigned long long inputc, outputc, process_max_iteration_count;
 
     // check if process should end early
@@ -143,6 +138,8 @@ private:
     }
 
 public:
+    std::vector<Point<T>> output;
+
     Scene(unsigned long long inputs, unsigned long long outputs) {
         nodes = std::vector<Node<T>*>();
         input = std::vector<Connection<T>>(inputs, Connection<T>());
