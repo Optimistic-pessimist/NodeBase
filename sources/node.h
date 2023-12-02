@@ -6,7 +6,6 @@
 #define NODEBASE_NODE_H
 
 #include "connection.h"
-#include "nodeBaseUtillity.h"
 #include <vector>
 #include <ostream>
 
@@ -201,7 +200,6 @@ public:
             }
             iteration_count++;
         }
-        throw NodeBaseUtillity::Warning("Scene contains a disconnected Point or a loop");
         std::vector<T> loutput(outputc);
         for(int i = 0; i < outputc; i++) {
             loutput[i] = output[i].get();
