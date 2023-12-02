@@ -155,12 +155,12 @@ public:
 
     void connect(unsigned long long i, Point<T> &to)
     {
-        output[i].connect(to);
+        input[i].connect(to);
     }
 
     void disconnect(unsigned long long i, Point<T> &to)
     {
-        output[i].disconnect(to);
+        input[i].disconnect(to);
     }
 
     void add_node(Node<T> *node)
