@@ -97,11 +97,10 @@ public:
 template<typename T>
 class Node_prototype
 {
-private:
+public:
     std::function<std::vector<T>(std::vector<T>)> __processf;
     unsigned long long __inputc, __outputc;
 
-public:
     explicit Node_prototype(unsigned long long inputs, unsigned long long outputs, std::function<std::vector<T>(std::vector<T>)> processfunc) {
         __processf = processfunc;
         __inputc = inputs;
